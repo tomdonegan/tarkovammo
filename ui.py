@@ -1,5 +1,4 @@
 import sys
-import os
 import database as db
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -12,47 +11,29 @@ class MainMenuUi(QWidget):
         super(MainMenuUi, self).__init__()
         self.css = QUrl("qrc:/index.html")
         self.setWindowTitle('Tarkov Ammo Data')
-        #self.setStyleSheet(open('stylesheet.css').read())
-        self.setStyleSheet(
+        self.setFixedSize(340, 400)
+        self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
+        self.styleSheet = (
             """
             QPushButton {
-            background-color: rgb(154, 136, 102);
+            background-color: grey;
             border-radius: 5px;
             color: white;
             font-size: 13px;
-            color: Black;
             width: 140px;
             height: 30px;
             }
     
             MainMenuUi {
-            background: black;
+            background: rgb(241,241,241);
             }
-    
-            AmmoTableWindow {
-            background: black;
-            }
-    
-            #TableWidget {
-            background-color: black;
-            color: rgb(154, 136, 102);
-            border-radius: 1px;
-            border:1px solid rgb(154, 136, 102);
-            gridline-color: rgb(154, 136, 102);
-            gridline-width: 5px;
-            }
-    
-            QHeaderView::section:horizontal {
-            border:1px solid rgb(154, 136, 102);
-            background: black;
-            color: rgb(154, 136, 102);
-            }
-    
+            
             QGroupBox {
-            border: 3px solid rgb(154, 136, 102);
+            border: 3px solid grey;
             border-radius: 5px;
             }"""
         )
+        self.setStyleSheet(self.styleSheet)
         self.setWindowIcon(QIcon('tarkov.ico'))
         self.createGridLayout()
 
@@ -164,46 +145,34 @@ class AmmoTableWindow(QWidget):
     def __init__(self, ammo_size):
         super(AmmoTableWindow, self).__init__()
         self.setWindowTitle('Tarkov Ammo Data - ' + str(ammo_size))
-        self.setStyleSheet(
+        self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
+        self.styleSheet = (
             """
-            QPushButton {
-            background-color: rgb(154, 136, 102);
-            border-radius: 5px;
-            color: white;
-            font-size: 13px;
-            color: Black;
-            width: 140px;
-            height: 30px;
-            }
-
-            MainMenuUi {
-            background: black;
-            }
-
             AmmoTableWindow {
-            background: black;
+            background: rgb(241,241,241);
             }
 
             #TableWidget {
-            background-color: black;
-            color: rgb(154, 136, 102);
+            background-color: rgb(241,241,241);
+            color: black;
             border-radius: 1px;
-            border:1px solid rgb(154, 136, 102);
-            gridline-color: rgb(154, 136, 102);
+            border:1px solid grey;
+            gridline-color: grey;
             gridline-width: 5px;
             }
 
             QHeaderView::section:horizontal {
-            border:1px solid rgb(154, 136, 102);
-            background: black;
-            color: rgb(154, 136, 102);
+            background: rgb(217, 217, 217);
+            font-weight: bold;
+            color: black;
             }
 
             QGroupBox {
-            border: 3px solid rgb(154, 136, 102);
+            border: 3px solid grey;
             border-radius: 5px;
             }"""
         )
+        self.setStyleSheet(self.styleSheet)
         self.setWindowIcon(QIcon('tarkov.ico'))
         self.ammo_size = ammo_size
         self.table_widget = QTableWidget()
@@ -214,6 +183,7 @@ class AmmoTableWindow(QWidget):
         self.setLayout(self.layout)
         self.table_widget.verticalHeader().setDefaultAlignment(Qt.AlignCenter)
         self.show()
+        self.setFixedSize(self.width(), self.height())
 
     def center(self):
         qr = self.frameGeometry()
@@ -274,16 +244,6 @@ class AmmoTableWindow(QWidget):
                 elif self.table_widget.item(row, col).text() == '0':
                     self.table_widget.item(row, col).setBackground(QColor(206,11,4))
                     self.table_widget.item(row, col).setForeground(QColor(0, 0, 0))
-
-def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-
-    return os.path.join(base_path, relative_path)
 
 
 if __name__ == '__main__':
