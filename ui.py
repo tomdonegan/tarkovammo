@@ -10,7 +10,7 @@ class MainMenuUi(QWidget):
     def __init__(self):
         super(MainMenuUi, self).__init__()
         self.css = QUrl("qrc:/index.html")
-        self.setWindowTitle('Tarkov Ammo Data')
+        self.setWindowTitle('Tarkov Ammo Data by ToMiSmE')
         self.setFixedSize(340, 400)
         self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
         self.styleSheet = (
@@ -26,6 +26,13 @@ class MainMenuUi(QWidget):
     
             MainMenuUi {
             background: rgb(241,241,241);
+            }
+            
+            QLabel {
+            background-color: grey;
+            color: white;
+            height: 60px;
+            border-radius: 5px;
             }
             
             QGroupBox {
@@ -109,27 +116,27 @@ class MainMenuUi(QWidget):
         self.btn20 = QPushButton('Other')
         self.btn20.clicked.connect(lambda: self.show_ammo_data('Other'))
 
-        self.btn21 = QPushButton('Close')
-        self.btn21.clicked.connect(lambda: self.show_ammo_data('Close'))
+        self.btn22 = QPushButton('12 Gauge Slugs')
+        self.btn22.clicked.connect(lambda: self.show_ammo_data('12 Gauge Slugs'))
 
-        layout.addWidget(self.btn1, 0, 0)
-        layout.addWidget(self.btn2, 1, 0)
-        layout.addWidget(self.btn3, 2, 0)
-        layout.addWidget(self.btn4, 3, 0)
-        layout.addWidget(self.btn5, 4, 0)
-        layout.addWidget(self.btn6, 5, 0)
-        layout.addWidget(self.btn7, 6, 0)
-        layout.addWidget(self.btn8, 7, 0)
-        layout.addWidget(self.btn9, 8, 0)
-        layout.addWidget(self.btn10, 9, 0)
-        layout.addWidget(self.btn11, 0, 1)
-        layout.addWidget(self.btn12, 1, 1)
-        layout.addWidget(self.btn13, 2, 1)
-        layout.addWidget(self.btn14, 3, 1)
-        layout.addWidget(self.btn15, 4, 1)
-        layout.addWidget(self.btn16, 5, 1)
-        layout.addWidget(self.btn17, 6, 1)
-        layout.addWidget(self.btn18, 7, 1)
+        layout.addWidget(self.btn12, 0, 0)
+        layout.addWidget(self.btn7, 1, 0)
+        layout.addWidget(self.btn1, 2, 0)
+        layout.addWidget(self.btn22, 3, 0)
+        layout.addWidget(self.btn18, 4, 0)
+        layout.addWidget(self.btn2, 5, 0)
+        layout.addWidget(self.btn3, 6, 0)
+        layout.addWidget(self.btn10, 7, 0)
+        layout.addWidget(self.btn13, 8, 0)
+        layout.addWidget(self.btn14, 9, 0)
+        layout.addWidget(self.btn5, 0, 1)
+        layout.addWidget(self.btn15, 1, 1)
+        layout.addWidget(self.btn16, 2, 1)
+        layout.addWidget(self.btn17, 3, 1)
+        layout.addWidget(self.btn4, 4, 1)
+        layout.addWidget(self.btn6, 5, 1)
+        layout.addWidget(self.btn8, 6, 1)
+        layout.addWidget(self.btn11, 7, 1)
         layout.addWidget(self.btn19, 8, 1)
         layout.addWidget(self.btn20, 9, 1)
 
@@ -158,7 +165,15 @@ class AmmoTableWindow(QWidget):
             border-radius: 1px;
             border:1px solid grey;
             gridline-color: grey;
-            gridline-width: 5px;
+            }
+            
+            QPushButton {
+            background-color: grey;
+            border-radius: 5px;
+            color: black;
+            font-weight: bold;
+            font-size: 13px;
+            height: 30px;
             }
 
             QHeaderView::section:horizontal {
@@ -174,25 +189,36 @@ class AmmoTableWindow(QWidget):
         )
         self.setStyleSheet(self.styleSheet)
         self.setWindowIcon(QIcon('tarkov.ico'))
+
         self.ammo_size = ammo_size
+
         self.table_widget = QTableWidget()
-        self.table_widget.setEnabled(False)
-        self.create_table()
+        self.table_widget.setSortingEnabled(True)
+        self.table_widget.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.table_widget.verticalHeader().setDefaultAlignment(Qt.AlignCenter)
+
+        self.reset_button = QPushButton('Reset Data')
+        self.reset_button.clicked.connect(self.reset_table)
+
+        self.create_table(self.ammo_size)
+
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.table_widget)
+        self.layout.addWidget(self.reset_button)
         self.setLayout(self.layout)
-        self.table_widget.verticalHeader().setDefaultAlignment(Qt.AlignCenter)
+
         self.show()
         self.setFixedSize(self.width(), self.height())
 
-    def center(self):
-        qr = self.frameGeometry()
-        cp = QDesktopWidget().availableGeometry().center()
-        qr.moveCenter(cp)
-        self.move(qr.topLeft())
+    def reset_table(self):
+        self.table_widget.setRowCount(0)
+        self.table_widget.setColumnCount(0)
+        self.create_table(self.ammo_size)
 
-    def create_table(self):
+    def create_table(self, ammo_size):
         db.ammo_data_list = []
+
+        self.ammo_size = ammo_size
 
         self.table_widget.setColumnCount(len(db.titles_list)-1)
         self.table_widget.setObjectName('TableWidget')
@@ -216,34 +242,29 @@ class AmmoTableWindow(QWidget):
         self.row = self.table_widget.rowCount()
         self.table_widget.setRowCount(self.row + 1)
         col = 0
+
         for item in row_data:
             cell = QTableWidgetItem(str(item))
             table.setItem(self.row, col, cell)
             col += 1
 
+        # Change color of cell depending on the value.
         for row in range(self.row + 1):
             for col in range(5, 11):
                 if self.table_widget.item(row, col).text() == '6':
-                    self.table_widget.item(row, col).setBackground(QColor(75,240,86))
-                    self.table_widget.item(row, col).setForeground(QColor(0, 0, 0))
+                    self.table_widget.item(row, col).setBackground(QColor(75, 240,86))
                 elif self.table_widget.item(row, col).text() == '5':
                     self.table_widget.item(row, col).setBackground(QColor(134,212,61))
-                    self.table_widget.item(row, col).setForeground(QColor(0, 0, 0))
                 elif self.table_widget.item(row, col).text() == '4':
                     self.table_widget.item(row, col).setBackground(QColor(192,184,37))
-                    self.table_widget.item(row, col).setForeground(QColor(0, 0, 0))
                 elif self.table_widget.item(row, col).text() == '3':
                     self.table_widget.item(row, col).setBackground(QColor(249,157,14))
-                    self.table_widget.item(row, col).setForeground(QColor(0, 0, 0))
                 elif self.table_widget.item(row, col).text() == '2':
                     self.table_widget.item(row, col).setBackground(QColor(234,108,10))
-                    self.table_widget.item(row, col).setForeground(QColor(0, 0, 0))
                 elif self.table_widget.item(row, col).text() == '1':
                     self.table_widget.item(row, col).setBackground(QColor(220,59,7))
-                    self.table_widget.item(row, col).setForeground(QColor(0, 0, 0))
                 elif self.table_widget.item(row, col).text() == '0':
                     self.table_widget.item(row, col).setBackground(QColor(206,11,4))
-                    self.table_widget.item(row, col).setForeground(QColor(0, 0, 0))
 
 
 if __name__ == '__main__':

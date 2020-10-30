@@ -1,5 +1,4 @@
 import gspread
-import pymongo
 from oauth2client.service_account import ServiceAccountCredentials
 from pprint import pprint
 
@@ -14,6 +13,8 @@ client = gspread.authorize(creds)
 sheet = client.open("tarkovammo").sheet1  # Open the spreadhseet
 
 data = sheet.get_all_records()  # Get a list of all records
+
+pprint(data)
 
 # titles_list = []
 #
