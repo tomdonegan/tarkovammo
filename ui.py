@@ -210,10 +210,12 @@ class AmmoTableWindow(QWidget):
         self.show()
         self.setFixedSize(self.width(), self.height())
 
+    # This section of code is fucking garbage
     def reset_table(self):
         self.table_widget.setRowCount(0)
         self.table_widget.setColumnCount(0)
         self.create_table(self.ammo_size)
+
 
     def create_table(self, ammo_size):
         db.ammo_data_list = []
