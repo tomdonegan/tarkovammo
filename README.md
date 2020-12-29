@@ -10,7 +10,7 @@ This is a basic application to provide easy access to the ammo data for the game
 
 ## Authors
 
-* **Tom Donegan** - *Initial work* - [TomDonegan](https://github.com/tomdonegan)
+* **Tom Donegan** - [TomDonegan](https://github.com/tomdonegan)
 
 ## License
 
