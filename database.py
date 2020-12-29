@@ -1,6 +1,6 @@
 import pymongo
 
-connection_url = 'mongodb+srv://tarkov-ammo:escapefromtarkov@cluster0.jxq25.mongodb.net/escape_from_tarkov?retryWrites=true&w=majority'
+connection_url = 'Database key required here'
 
 client = pymongo.MongoClient(connection_url)
 

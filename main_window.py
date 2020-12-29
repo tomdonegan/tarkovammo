@@ -9,10 +9,16 @@ class MainMenuUi(QWidget):
 
     def __init__(self):
         super(MainMenuUi, self).__init__()
-        self.css = QUrl("qrc:/index.html")
         self.setWindowTitle('Tarkov Ammo Data by ToMiSmE')
+        self.setWindowIcon(QIcon('tarkov.ico'))
+
+        # Stops the window from being resized
         self.setFixedSize(340, 400)
+
         self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
+
+        # The below is a in-script css sheet, this removes the requirement for an external css file
+        # and makes packing into an .exe easier
         self.styleSheet = (
             """
             QPushButton {
@@ -41,9 +47,8 @@ class MainMenuUi(QWidget):
             }"""
         )
         self.setStyleSheet(self.styleSheet)
-        self.setWindowIcon(QIcon('tarkov.ico'))
-        self.createGridLayout()
 
+        self.createGridLayout()
 
         window_layout = QVBoxLayout()
         window_layout.addWidget(self.horizontalGroupBox)
@@ -56,89 +61,99 @@ class MainMenuUi(QWidget):
         layout.setColumnStretch(0, 3)
         layout.setColumnStretch(1, 3)
 
-        self.btn1 = QPushButton('12 Gauge Shot')
-        self.btn1.clicked.connect(lambda: self.show_ammo_data('12 Gauge Shot'))
+        # When adding a "clicked" signal to a button, "lamda" must be used to
+        # allow the passing of a parameter within the function call
+        btn1 = QPushButton('12 Gauge Shot')
+        btn1.clicked.connect(lambda: self.show_ammo_data('12 Gauge Shot'))
 
-        self.btn2 = QPushButton('20 Gauge')
-        self.btn2.clicked.connect(lambda: self.show_ammo_data('20 Gauge'))
+        btn2 = QPushButton('20 Gauge')
+        btn2.clicked.connect(lambda: self.show_ammo_data('20 Gauge'))
 
-        self.btn3 = QPushButton('23x75 mm')
-        self.btn3.clicked.connect(lambda: self.show_ammo_data('23x75 mm'))
+        btn3 = QPushButton('23x75 mm')
+        btn3.clicked.connect(lambda: self.show_ammo_data('23x75 mm'))
 
-        self.btn4 = QPushButton('9x18mm')
-        self.btn4.clicked.connect(lambda: self.show_ammo_data('9x18mm'))
+        btn4 = QPushButton('9x18mm')
+        btn4.clicked.connect(lambda: self.show_ammo_data('9x18mm'))
 
-        self.btn5 = QPushButton('7.62x25mm')
-        self.btn5.clicked.connect(lambda: self.show_ammo_data('7.62x25mm'))
+        btn5 = QPushButton('7.62x25mm')
+        btn5.clicked.connect(lambda: self.show_ammo_data('7.62x25mm'))
 
-        self.btn6 = QPushButton('9x19mm')
-        self.btn6.clicked.connect(lambda: self.show_ammo_data('9x19mm'))
+        btn6 = QPushButton('9x19mm')
+        btn6.clicked.connect(lambda: self.show_ammo_data('9x19mm'))
 
-        self.btn7 = QPushButton('0.45')
-        self.btn7.clicked.connect(lambda: self.show_ammo_data(0.45))
+        btn7 = QPushButton('0.45')
+        btn7.clicked.connect(lambda: self.show_ammo_data(0.45))
 
-        self.btn8 = QPushButton('9x21mm')
-        self.btn8.clicked.connect(lambda: self.show_ammo_data('9x21mm'))
+        btn8 = QPushButton('9x21mm')
+        btn8.clicked.connect(lambda: self.show_ammo_data('9x21mm'))
 
-        self.btn9 = QPushButton('5.7x28 mm')
-        self.btn9.clicked.connect(lambda: self.show_ammo_data('5.7x28 mm'))
+        btn9 = QPushButton('5.7x28 mm')
+        btn9.clicked.connect(lambda: self.show_ammo_data('5.7x28 mm'))
 
-        self.btn10 = QPushButton('4.6x30 mm')
-        self.btn10.clicked.connect(lambda: self.show_ammo_data('4.6x30 mm'))
+        btn10 = QPushButton('4.6x30 mm')
+        btn10.clicked.connect(lambda: self.show_ammo_data('4.6x30 mm'))
 
-        self.btn11 = QPushButton('9x39mm')
-        self.btn11.clicked.connect(lambda: self.show_ammo_data('9x39mm'))
+        btn11 = QPushButton('9x39mm')
+        btn11.clicked.connect(lambda: self.show_ammo_data('9x39mm'))
 
-        self.btn12 = QPushButton('0.366')
-        self.btn12.clicked.connect(lambda: self.show_ammo_data(0.366))
+        btn12 = QPushButton('0.366')
+        btn12.clicked.connect(lambda: self.show_ammo_data(0.366))
 
-        self.btn13 = QPushButton('5.45x39 mm')
-        self.btn13.clicked.connect(lambda: self.show_ammo_data('5.45x39 mm'))
+        btn13 = QPushButton('5.45x39 mm')
+        btn13.clicked.connect(lambda: self.show_ammo_data('5.45x39 mm'))
 
-        self.btn14 = QPushButton('5.56x45 mm')
-        self.btn14.clicked.connect(lambda: self.show_ammo_data('5.56x45 mm'))
+        btn14 = QPushButton('5.56x45 mm')
+        btn14.clicked.connect(lambda: self.show_ammo_data('5.56x45 mm'))
 
-        self.btn15 = QPushButton('7.62x39 mm')
-        self.btn15.clicked.connect(lambda: self.show_ammo_data('7.62x39 mm'))
+        btn15 = QPushButton('7.62x39 mm')
+        btn15.clicked.connect(lambda: self.show_ammo_data('7.62x39 mm'))
 
-        self.btn16 = QPushButton('7.62x51 mm')
-        self.btn16.clicked.connect(lambda: self.show_ammo_data('7.62x51 mm'))
+        btn16 = QPushButton('7.62x51 mm')
+        btn16.clicked.connect(lambda: self.show_ammo_data('7.62x51 mm'))
 
-        self.btn17 = QPushButton('7.62x54R')
-        self.btn17.clicked.connect(lambda: self.show_ammo_data('7.62x54R'))
+        btn17 = QPushButton('7.62x54R')
+        btn17.clicked.connect(lambda: self.show_ammo_data('7.62x54R'))
 
-        self.btn18 = QPushButton('12.7x55 mm')
-        self.btn18.clicked.connect(lambda: self.show_ammo_data('12.7x55 mm'))
+        btn18 = QPushButton('12.7x55 mm')
+        btn18.clicked.connect(lambda: self.show_ammo_data('12.7x55 mm'))
 
-        self.btn19 = QPushButton('Mounted Weapons')
-        self.btn19.clicked.connect(lambda: self.show_ammo_data('Mounted Weapons'))
+        btn19 = QPushButton('Mounted Weapons')
+        btn19.clicked.connect(lambda: self.show_ammo_data('Mounted Weapons'))
 
-        self.btn20 = QPushButton('Other')
-        self.btn20.clicked.connect(lambda: self.show_ammo_data('Other'))
+        btn20 = QPushButton('Other')
+        btn20.clicked.connect(lambda: self.show_ammo_data('Other'))
 
-        self.btn22 = QPushButton('12 Gauge Slugs')
-        self.btn22.clicked.connect(lambda: self.show_ammo_data('12 Gauge Slugs'))
+        btn22 = QPushButton('12 Gauge Slugs')
+        btn22.clicked.connect(lambda: self.show_ammo_data('12 Gauge Slugs'))
 
-        layout.addWidget(self.btn12, 0, 0)
-        layout.addWidget(self.btn7, 1, 0)
-        layout.addWidget(self.btn1, 2, 0)
-        layout.addWidget(self.btn22, 3, 0)
-        layout.addWidget(self.btn18, 4, 0)
-        layout.addWidget(self.btn2, 5, 0)
-        layout.addWidget(self.btn3, 6, 0)
-        layout.addWidget(self.btn10, 7, 0)
-        layout.addWidget(self.btn13, 8, 0)
-        layout.addWidget(self.btn14, 9, 0)
-        layout.addWidget(self.btn5, 0, 1)
-        layout.addWidget(self.btn15, 1, 1)
-        layout.addWidget(self.btn16, 2, 1)
-        layout.addWidget(self.btn17, 3, 1)
-        layout.addWidget(self.btn4, 4, 1)
-        layout.addWidget(self.btn6, 5, 1)
-        layout.addWidget(self.btn8, 6, 1)
-        layout.addWidget(self.btn11, 7, 1)
-        layout.addWidget(self.btn19, 8, 1)
-        layout.addWidget(self.btn20, 9, 1)
+        btn23 = QPushButton('.338 Lapua Magnum')
+        btn23.clicked.connect(lambda: self.show_ammo_data('.338 Lapua Magnum'))
+
+        btn24 = QPushButton('.300 Blackout')
+        btn24.clicked.connect(lambda: self.show_ammo_data('300 BLK'))
+
+        layout.addWidget(btn12, 0, 0)
+        layout.addWidget(btn7, 1, 0)
+        layout.addWidget(btn1, 2, 0)
+        layout.addWidget(btn22, 3, 0)
+        layout.addWidget(btn18, 4, 0)
+        layout.addWidget(btn2, 5, 0)
+        layout.addWidget(btn3, 6, 0)
+        layout.addWidget(btn10, 7, 0)
+        layout.addWidget(btn13, 8, 0)
+        layout.addWidget(btn14, 9, 0)
+        layout.addWidget(btn5, 0, 1)
+        layout.addWidget(btn15, 1, 1)
+        layout.addWidget(btn16, 2, 1)
+        layout.addWidget(btn17, 3, 1)
+        layout.addWidget(btn4, 4, 1)
+        layout.addWidget(btn6, 5, 1)
+        layout.addWidget(btn8, 6, 1)
+        layout.addWidget(btn11, 7, 1)
+        layout.addWidget(btn24, 8, 1)
+        layout.addWidget(btn23, 9, 1)
+        layout.addWidget(btn20, 10, 0)
+        layout.addWidget(btn19, 10, 1)
 
         self.horizontalGroupBox.setLayout(layout)
 
@@ -193,12 +208,13 @@ class AmmoTableWindow(QWidget):
         self.ammo_size = ammo_size
 
         self.table_widget = QTableWidget()
-        self.table_widget.setSortingEnabled(True)
         self.table_widget.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.table_widget.verticalHeader().setDefaultAlignment(Qt.AlignCenter)
 
         self.reset_button = QPushButton('Reset Data')
         self.reset_button.clicked.connect(self.reset_table)
+
+        self.table_widget.horizontalHeader()
 
         self.create_table(self.ammo_size)
 
@@ -209,13 +225,13 @@ class AmmoTableWindow(QWidget):
 
         self.show()
         self.setFixedSize(self.width(), self.height())
+        self.table_widget.setSortingEnabled(True)
 
     # This section of code is fucking garbage
     def reset_table(self):
         self.table_widget.setRowCount(0)
         self.table_widget.setColumnCount(0)
         self.create_table(self.ammo_size)
-
 
     def create_table(self, ammo_size):
         db.ammo_data_list = []
@@ -224,9 +240,9 @@ class AmmoTableWindow(QWidget):
 
         self.table_widget.setColumnCount(len(db.titles_list)-1)
         self.table_widget.setObjectName('TableWidget')
-        self.row = self.table_widget.rowCount()
-        self.col = self.table_widget.columnCount()
-        self.table_widget.setRowCount(self.row)
+        row = self.table_widget.rowCount()
+        col = self.table_widget.columnCount()
+        self.table_widget.setRowCount(row)
         self.table_widget.verticalHeader().hide()
         self.table_widget.verticalScrollBar().hide()
         self.table_widget.horizontalScrollBar().hide()
@@ -241,32 +257,32 @@ class AmmoTableWindow(QWidget):
         self.table_widget.resizeColumnsToContents()
 
     def add_table_row(self, table, row_data):
-        self.row = self.table_widget.rowCount()
-        self.table_widget.setRowCount(self.row + 1)
+        row = self.table_widget.rowCount()
+        self.table_widget.setRowCount(row + 1)
         col = 0
 
         for item in row_data:
             cell = QTableWidgetItem(str(item))
-            table.setItem(self.row, col, cell)
+            table.setItem(row, col, cell)
             col += 1
 
         # Change color of cell depending on the value.
-        for row in range(self.row + 1):
+        for row in range(row + 1):
             for col in range(5, 11):
                 if self.table_widget.item(row, col).text() == '6':
-                    self.table_widget.item(row, col).setBackground(QColor(75, 240,86))
+                    self.table_widget.item(row, col).setBackground(QColor(75, 240, 86))
                 elif self.table_widget.item(row, col).text() == '5':
-                    self.table_widget.item(row, col).setBackground(QColor(134,212,61))
+                    self.table_widget.item(row, col).setBackground(QColor(134, 212, 61))
                 elif self.table_widget.item(row, col).text() == '4':
-                    self.table_widget.item(row, col).setBackground(QColor(192,184,37))
+                    self.table_widget.item(row, col).setBackground(QColor(192, 184, 37))
                 elif self.table_widget.item(row, col).text() == '3':
-                    self.table_widget.item(row, col).setBackground(QColor(249,157,14))
+                    self.table_widget.item(row, col).setBackground(QColor(249, 157, 14))
                 elif self.table_widget.item(row, col).text() == '2':
-                    self.table_widget.item(row, col).setBackground(QColor(234,108,10))
+                    self.table_widget.item(row, col).setBackground(QColor(234, 108, 10))
                 elif self.table_widget.item(row, col).text() == '1':
-                    self.table_widget.item(row, col).setBackground(QColor(220,59,7))
+                    self.table_widget.item(row, col).setBackground(QColor(220, 59, 7))
                 elif self.table_widget.item(row, col).text() == '0':
-                    self.table_widget.item(row, col).setBackground(QColor(206,11,4))
+                    self.table_widget.item(row, col).setBackground(QColor(206, 11, 4))
 
 
 if __name__ == '__main__':
