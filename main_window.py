@@ -1,5 +1,6 @@
 import sys
 import database as db
+from requests import request
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
@@ -61,99 +62,22 @@ class MainMenuUi(QWidget):
         layout.setColumnStretch(0, 3)
         layout.setColumnStretch(1, 3)
 
-        # When adding a "clicked" signal to a button, "lamda" must be used to
-        # allow the passing of a parameter within the function call
-        btn1 = QPushButton('12 Gauge Shot')
-        btn1.clicked.connect(lambda: self.show_ammo_data('12 Gauge Shot'))
+        button_list = ['.300 Blackout', '5.56x45 mm',
+                       '.338 Lapua Magnum', '7.62x25mm',
+                       '.366mm', '7.62x39 mm',
+                       '.45mm', '7.62x51 mm',
+                       '12 Gauge Shot', '7.62x54R',
+                       '12 Gauge Slugs', '9x18mm',
+                       '12.7x55 mm', '9x19mm',
+                       '20 Gauge', '9x21mm',
+                       '23x75 mm', '9x39mm',
+                       '4.6x30 mm', 'Mounted Weapons',
+                       '5.45x39 mm', 'Other']
 
-        btn2 = QPushButton('20 Gauge')
-        btn2.clicked.connect(lambda: self.show_ammo_data('20 Gauge'))
-
-        btn3 = QPushButton('23x75 mm')
-        btn3.clicked.connect(lambda: self.show_ammo_data('23x75 mm'))
-
-        btn4 = QPushButton('9x18mm')
-        btn4.clicked.connect(lambda: self.show_ammo_data('9x18mm'))
-
-        btn5 = QPushButton('7.62x25mm')
-        btn5.clicked.connect(lambda: self.show_ammo_data('7.62x25mm'))
-
-        btn6 = QPushButton('9x19mm')
-        btn6.clicked.connect(lambda: self.show_ammo_data('9x19mm'))
-
-        btn7 = QPushButton('0.45')
-        btn7.clicked.connect(lambda: self.show_ammo_data(0.45))
-
-        btn8 = QPushButton('9x21mm')
-        btn8.clicked.connect(lambda: self.show_ammo_data('9x21mm'))
-
-        btn9 = QPushButton('5.7x28 mm')
-        btn9.clicked.connect(lambda: self.show_ammo_data('5.7x28 mm'))
-
-        btn10 = QPushButton('4.6x30 mm')
-        btn10.clicked.connect(lambda: self.show_ammo_data('4.6x30 mm'))
-
-        btn11 = QPushButton('9x39mm')
-        btn11.clicked.connect(lambda: self.show_ammo_data('9x39mm'))
-
-        btn12 = QPushButton('0.366')
-        btn12.clicked.connect(lambda: self.show_ammo_data(0.366))
-
-        btn13 = QPushButton('5.45x39 mm')
-        btn13.clicked.connect(lambda: self.show_ammo_data('5.45x39 mm'))
-
-        btn14 = QPushButton('5.56x45 mm')
-        btn14.clicked.connect(lambda: self.show_ammo_data('5.56x45 mm'))
-
-        btn15 = QPushButton('7.62x39 mm')
-        btn15.clicked.connect(lambda: self.show_ammo_data('7.62x39 mm'))
-
-        btn16 = QPushButton('7.62x51 mm')
-        btn16.clicked.connect(lambda: self.show_ammo_data('7.62x51 mm'))
-
-        btn17 = QPushButton('7.62x54R')
-        btn17.clicked.connect(lambda: self.show_ammo_data('7.62x54R'))
-
-        btn18 = QPushButton('12.7x55 mm')
-        btn18.clicked.connect(lambda: self.show_ammo_data('12.7x55 mm'))
-
-        btn19 = QPushButton('Mounted Weapons')
-        btn19.clicked.connect(lambda: self.show_ammo_data('Mounted Weapons'))
-
-        btn20 = QPushButton('Other')
-        btn20.clicked.connect(lambda: self.show_ammo_data('Other'))
-
-        btn22 = QPushButton('12 Gauge Slugs')
-        btn22.clicked.connect(lambda: self.show_ammo_data('12 Gauge Slugs'))
-
-        btn23 = QPushButton('.338 Lapua Magnum')
-        btn23.clicked.connect(lambda: self.show_ammo_data('.338 Lapua Magnum'))
-
-        btn24 = QPushButton('.300 Blackout')
-        btn24.clicked.connect(lambda: self.show_ammo_data('300 BLK'))
-
-        layout.addWidget(btn12, 0, 0)
-        layout.addWidget(btn7, 1, 0)
-        layout.addWidget(btn1, 2, 0)
-        layout.addWidget(btn22, 3, 0)
-        layout.addWidget(btn18, 4, 0)
-        layout.addWidget(btn2, 5, 0)
-        layout.addWidget(btn3, 6, 0)
-        layout.addWidget(btn10, 7, 0)
-        layout.addWidget(btn13, 8, 0)
-        layout.addWidget(btn14, 9, 0)
-        layout.addWidget(btn5, 0, 1)
-        layout.addWidget(btn15, 1, 1)
-        layout.addWidget(btn16, 2, 1)
-        layout.addWidget(btn17, 3, 1)
-        layout.addWidget(btn4, 4, 1)
-        layout.addWidget(btn6, 5, 1)
-        layout.addWidget(btn8, 6, 1)
-        layout.addWidget(btn11, 7, 1)
-        layout.addWidget(btn24, 8, 1)
-        layout.addWidget(btn23, 9, 1)
-        layout.addWidget(btn20, 10, 0)
-        layout.addWidget(btn19, 10, 1)
+        for i in button_list:
+            btn = QPushButton(i)
+            btn.clicked.connect(lambda pass_ammo, param=btn.text(): self.show_ammo_data(param))
+            layout.addWidget(btn)
 
         self.horizontalGroupBox.setLayout(layout)
 
@@ -259,12 +183,9 @@ class AmmoTableWindow(QWidget):
     def add_table_row(self, table, row_data):
         row = self.table_widget.rowCount()
         self.table_widget.setRowCount(row + 1)
-        col = 0
-
-        for item in row_data:
+        for col, item in enumerate(row_data):
             cell = QTableWidgetItem(str(item))
             table.setItem(row, col, cell)
-            col += 1
 
         # Change color of cell depending on the value.
         for row in range(row + 1):
