@@ -79,8 +79,7 @@ class MainMenuUi(QWidget):
                        '20 Gauge', '9x21mm',
                        '23x75 mm', '9x39mm',
                        '4.6x30 mm', 'Mounted Weapons',
-                       '5.45x39 mm', 'Other',
-                       'Update']
+                       '5.45x39 mm', 'Other']
 
         for i in button_list:
             btn = QPushButton(i)
