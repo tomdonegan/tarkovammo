@@ -7,6 +7,13 @@ This is a basic application to provide easy access to the ammo data for the game
 * [Python](http://www.python.org)
 * [PyQt5](https://pypi.org/project/PyQt5/) - Ui Build
 * [MongoDB](https://www.mongodb.com/) - Database Usage
+* [Pyinstaller](https://pyinstaller.readthedocs.io/en/stable/) - .exe Build
+
+## Most Recent Build
+
+The most recent .exe build of "Tarkov Ammo" will always be included in the "dist" folder.
+If using or changing this code, your .exe file can be built using [Pyinstaller](https://pyinstaller.readthedocs.io/en/stable/).
+
 
 ## Authors
 

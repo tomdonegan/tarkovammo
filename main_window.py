@@ -1,9 +1,16 @@
 import sys
 import database as db
-
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
+
+_AppName_ = 'Tarkov Ammo'
+__author__ = 'Tom Donegan'
+__license__ = 'The MIT License (MIT)'
+__version__ = '0.1'
+__maintainer__ = 'Tom Donegan'
+__email__ = 'tomdonegan@live.co.uk'
+__status__ = 'Beta'
 
 
 class MainMenuUi(QWidget):
@@ -72,7 +79,8 @@ class MainMenuUi(QWidget):
                        '20 Gauge', '9x21mm',
                        '23x75 mm', '9x39mm',
                        '4.6x30 mm', 'Mounted Weapons',
-                       '5.45x39 mm', 'Other']
+                       '5.45x39 mm', 'Other',
+                       'Update']
 
         for i in button_list:
             btn = QPushButton(i)
