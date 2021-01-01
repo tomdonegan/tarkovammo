@@ -1,6 +1,6 @@
 import sys
 import database as db
-from requests import request
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
@@ -30,18 +30,18 @@ class MainMenuUi(QWidget):
             width: 140px;
             height: 30px;
             }
-    
+
             MainMenuUi {
             background: rgb(241,241,241);
             }
-            
+
             QLabel {
             background-color: grey;
             color: white;
             height: 60px;
             border-radius: 5px;
             }
-            
+
             QGroupBox {
             border: 3px solid grey;
             border-radius: 5px;
@@ -105,7 +105,7 @@ class AmmoTableWindow(QWidget):
             border:1px solid grey;
             gridline-color: grey;
             }
-            
+
             QPushButton {
             background-color: grey;
             border-radius: 5px;
@@ -162,7 +162,7 @@ class AmmoTableWindow(QWidget):
 
         self.ammo_size = ammo_size
 
-        self.table_widget.setColumnCount(len(db.titles_list)-1)
+        self.table_widget.setColumnCount(len(db.titles_list) - 1)
         self.table_widget.setObjectName('TableWidget')
         row = self.table_widget.rowCount()
         col = self.table_widget.columnCount()
