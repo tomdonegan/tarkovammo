@@ -1,5 +1,9 @@
 import sys
+import os
 import database as db
+import requests
+import urllib.request
+import wget
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
@@ -7,7 +11,7 @@ from PyQt5.QtCore import *
 _AppName_ = 'Tarkov Ammo'
 __author__ = 'Tom Donegan'
 __license__ = 'The MIT License (MIT)'
-__version__ = '0.1'
+__version__ = 0.0
 __maintainer__ = 'Tom Donegan'
 __email__ = 'tomdonegan@live.co.uk'
 __status__ = 'Beta'
@@ -19,7 +23,6 @@ class MainMenuUi(QWidget):
         super(MainMenuUi, self).__init__()
         self.setWindowTitle('Tarkov Ammo Data by ToMiSmE')
         self.setWindowIcon(QIcon('tarkov.ico'))
-
         # Stops the window from being resized
         self.setFixedSize(340, 400)
 
@@ -79,18 +82,103 @@ class MainMenuUi(QWidget):
                        '20 Gauge', '9x21mm',
                        '23x75 mm', '9x39mm',
                        '4.6x30 mm', 'Mounted Weapons',
-                       '5.45x39 mm', 'Other']
+                       '5.45x39 mm', 'Other',
+                       'Check for Updates']
 
         for i in button_list:
             btn = QPushButton(i)
-            btn.clicked.connect(lambda pass_ammo, param=btn.text(): self.show_ammo_data(param))
-            layout.addWidget(btn)
+            if 'Updates' in btn.text():
+                btn.clicked.connect(self.update_check)
+                last_row = layout.rowCount()
+                layout.addWidget(btn, last_row, 0, 1, 2)
+            else:
+                btn.clicked.connect(lambda pass_ammo, param=btn.text(): self.show_ammo_data(param))
+                layout.addWidget(btn)
 
         self.horizontalGroupBox.setLayout(layout)
 
     def show_ammo_data(self, ammo_size):
         self.ammo_table_window = AmmoTableWindow(ammo_size)
         self.ammo_table_window.show()
+
+    # Below function checks Github for version data. If current version number is lower,
+    # files will be downloaded after confirmation from the user.
+    def update_check(self):
+        styleSheet = (
+            """
+            QPushButton {
+            background-color: grey;
+            border-radius: 5px;
+            color: white;
+            font-size: 13px;
+            width: 100%;
+            height: 30px;
+            }
+            
+            QLabel {
+            background-color: white;
+            color: black;
+            height: 60px;
+            border-radius: 5px;
+            }
+            """
+        )
+        self.setStyleSheet(styleSheet)
+        try:
+            git_version_data = float(requests.get('https://raw.githubusercontent.com/'
+                                                  'tomdonegan/tarkovammo/master/version.txt').text)
+            local_version = float(__version__)
+            if local_version < git_version_data:
+                update = QMessageBox.information(self, 'Update Available', f'Current Version: {local_version} '
+                                                                           f'\nAvailable Version: {git_version_data} '
+                                                                           f'\nDownload update?',
+                                                 QMessageBox.Yes | QMessageBox.No)
+                if update == QMessageBox.Yes:
+                    self.download()
+
+            else:
+                QMessageBox.information(self, 'Update Check', 'You are all up to date.', QMessageBox.Ok)
+        except ValueError:
+            QMessageBox.information(self, 'Update Error', 'Could not retrieve update!\nConnection Unavailable.',
+                                    QMessageBox.Ok)
+
+    def update_downloader(self):
+        url = 'https://github.com/tomdonegan/tarkovammo/raw/master/dist/TarkovAmmo.rar'
+        wget.download(url, self.get_download_path(), self.handle_progress)
+
+    def download(self):
+
+        # specify the url of the file which is to be downloaded
+        down_url = 'https://github.com/tomdonegan/tarkovammo/raw/master/dist/TarkovAmmo.rar'  # specify download url here
+
+        # specify save location where the file is to be saved
+        save_loc = self.get_download_path()
+
+        # Dowloading using urllib
+        urllib.request.urlretrieve(down_url, r'C:\Users\tomdo\Downloads\TarkovAmmo.rar', self.handle_progress)
+
+    def handle_progress(self, blocknum, blocksize, totalsize):
+        progressBar = QProgressBar()
+        progressBar.setGeometry(25, 45, 210, 30)
+        ## calculate the progress
+        readed_data = blocknum * blocksize
+
+        if totalsize > 0:
+            download_percentage = readed_data * 100 / totalsize
+            progressBar.setValue(download_percentage)
+            QApplication.processEvents()
+
+    def get_download_path(self):
+        """Returns the default downloads path for linux or windows"""
+        if os.name == 'nt':
+            import winreg
+            sub_key = r'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders'
+            downloads_guid = '{374DE290-123F-4565-9164-39C4925E467B}'
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, sub_key) as key:
+                location = winreg.QueryValueEx(key, downloads_guid)[0]
+            return location
+        else:
+            return os.path.join(os.path.expanduser('~'), 'downloads')
 
 
 class AmmoTableWindow(QWidget):
