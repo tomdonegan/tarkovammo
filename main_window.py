@@ -3,7 +3,7 @@ import os
 import database as db
 import requests
 import urllib.request
-import wget
+# import wget
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
@@ -11,7 +11,7 @@ from PyQt5.QtCore import *
 _AppName_ = 'Tarkov Ammo'
 __author__ = 'Tom Donegan'
 __license__ = 'The MIT License (MIT)'
-__version__ = 0.0
+__version__ = 0.1
 __maintainer__ = 'Tom Donegan'
 __email__ = 'tomdonegan@live.co.uk'
 __status__ = 'Beta'
@@ -25,7 +25,6 @@ class MainMenuUi(QWidget):
         self.setWindowIcon(QIcon('tarkov.ico'))
         # Stops the window from being resized
         self.setFixedSize(340, 400)
-
         self.setWindowFlags(Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
 
         # The below is a in-script css sheet, this removes the requirement for an external css file
@@ -73,24 +72,26 @@ class MainMenuUi(QWidget):
         layout.setColumnStretch(1, 3)
 
         button_list = ['.300 Blackout', '5.56x45 mm',
-                       '.338 Lapua Magnum', '7.62x25mm',
-                       '.366mm', '7.62x39 mm',
-                       '.45mm', '7.62x51 mm',
-                       '12 Gauge Shot', '7.62x54R',
-                       '12 Gauge Slugs', '9x18mm',
-                       '12.7x55 mm', '9x19mm',
-                       '20 Gauge', '9x21mm',
-                       '23x75 mm', '9x39mm',
-                       '4.6x30 mm', 'Mounted Weapons',
-                       '5.45x39 mm', 'Other',
-                       'Check for Updates']
+                       '.338 Lapua Magnum', '5.7x28 mm',
+                       '.366mm', '7.62x25mm',
+                       '.45mm', '7.62x39 mm',
+                       '12 Gauge Shot', '7.62x51mm',
+                       '12 Gauge Slugs', '7.62x54R',
+                       '12.7x55 mm', '9x18mm',
+                       '20 Gauge', '9x19mm',
+                       '23x75 mm', '9x21mm',
+                       '4.6x30 mm', '9x39mm',
+                       '5.45x39 mm', 'Mounted Weapons',
+                       'Other', 'Check for Updates']
 
         for i in button_list:
             btn = QPushButton(i)
             if 'Updates' in btn.text():
-                btn.clicked.connect(self.update_check)
-                last_row = layout.rowCount()
-                layout.addWidget(btn, last_row, 0, 1, 2)
+                btn.clicked.connect(self.show_update_window)
+                layout.addWidget(btn)
+                #last_row = layout.rowCount()
+                # Adds the "Check for Updates" button to the bottom of the table.
+                #layout.addWidget(btn, last_row, 0, 1, 2)
             else:
                 btn.clicked.connect(lambda pass_ammo, param=btn.text(): self.show_ammo_data(param))
                 layout.addWidget(btn)
@@ -101,9 +102,22 @@ class MainMenuUi(QWidget):
         self.ammo_table_window = AmmoTableWindow(ammo_size)
         self.ammo_table_window.show()
 
+    def show_update_window(self):
+        UpdateCheck()
+
+
+class UpdateCheck(QWidget):
+    def __init__(self):
+        # super(UpdateCheck, self).__init__()
+        # self.setWindowTitle('This is the window')
+        # self.progressBar = QProgressBar(self)
+        super().__init__()
+        self.update_check()
+
     # Below function checks Github for version data. If current version number is lower,
     # files will be downloaded after confirmation from the user.
     def update_check(self):
+        msg = QMessageBox()
         styleSheet = (
             """
             QPushButton {
@@ -114,7 +128,7 @@ class MainMenuUi(QWidget):
             width: 100%;
             height: 30px;
             }
-            
+
             QLabel {
             background-color: white;
             color: black;
@@ -129,56 +143,50 @@ class MainMenuUi(QWidget):
                                                   'tomdonegan/tarkovammo/master/version.txt').text)
             local_version = float(__version__)
             if local_version < git_version_data:
-                update = QMessageBox.information(self, 'Update Available', f'Current Version: {local_version} '
-                                                                           f'\nAvailable Version: {git_version_data} '
-                                                                           f'\nDownload update?',
-                                                 QMessageBox.Yes | QMessageBox.No)
-                if update == QMessageBox.Yes:
-                    self.download()
-
+                update_selection = msg.information(self, 'Update Available',
+                                                   f'Current Version: {local_version} '
+                                                   f'\nAvailable Version: {git_version_data} '
+                                                   f'\nDownload update?',
+                                                   QMessageBox.Yes | QMessageBox.No)
+                if update_selection == msg.Yes:
+                    self.update_downloader()
             else:
-                QMessageBox.information(self, 'Update Check', 'You are all up to date.', QMessageBox.Ok)
+                msg.information(self, 'Update Check', 'You are all up to date.', QMessageBox.Ok)
         except ValueError:
-            QMessageBox.information(self, 'Update Error', 'Could not retrieve update!\nConnection Unavailable.',
-                                    QMessageBox.Ok)
+            msg.information(self, 'Update Error', 'Could not retrieve update!\nConnection Unavailable.',
+                            QMessageBox.Ok)
+
+    def get_download_path(self):
+        """Returns the default downloads path for linux or windows"""
+        if os.name != 'nt':
+            return os.path.join(os.path.expanduser('~'), 'downloads')
+        import winreg
+        sub_key = r'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders'
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, sub_key) as key:
+            downloads_guid = '{374DE290-123F-4565-9164-39C4925E467B}'
+            location = winreg.QueryValueEx(key, downloads_guid)[0]
+        return location
 
     def update_downloader(self):
-        url = 'https://github.com/tomdonegan/tarkovammo/raw/master/dist/TarkovAmmo.rar'
-        wget.download(url, self.get_download_path(), self.handle_progress)
-
-    def download(self):
 
         # specify the url of the file which is to be downloaded
         down_url = 'https://github.com/tomdonegan/tarkovammo/raw/master/dist/TarkovAmmo.rar'  # specify download url here
 
         # specify save location where the file is to be saved
-        save_loc = self.get_download_path()
+        save_loc = self.get_download_path() + '/TarkovAmmo.rar'
 
         # Dowloading using urllib
-        urllib.request.urlretrieve(down_url, r'C:\Users\tomdo\Downloads\TarkovAmmo.rar', self.handle_progress)
+        urllib.request.urlretrieve(down_url, save_loc, self.handle_progress)
 
     def handle_progress(self, blocknum, blocksize, totalsize):
-        progressBar = QProgressBar()
-        progressBar.setGeometry(25, 45, 210, 30)
-        ## calculate the progress
-        readed_data = blocknum * blocksize
-
         if totalsize > 0:
-            download_percentage = readed_data * 100 / totalsize
-            progressBar.setValue(download_percentage)
-            QApplication.processEvents()
+            ## calculate the progress
+            read_data = blocknum * blocksize
 
-    def get_download_path(self):
-        """Returns the default downloads path for linux or windows"""
-        if os.name == 'nt':
-            import winreg
-            sub_key = r'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders'
-            downloads_guid = '{374DE290-123F-4565-9164-39C4925E467B}'
-            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, sub_key) as key:
-                location = winreg.QueryValueEx(key, downloads_guid)[0]
-            return location
-        else:
-            return os.path.join(os.path.expanduser('~'), 'downloads')
+            download_percentage = read_data * 100 / totalsize
+            print(download_percentage)
+            # self.progressBar.setValue(download_percentage)
+            QApplication.processEvents()
 
 
 class AmmoTableWindow(QWidget):

@@ -1,6 +1,6 @@
 import pymongo
 
-connection_url = 'insert database key'
+connection_url = 'DATABASE CONNECTION KEY REQUIRED'
 
 client = pymongo.MongoClient(connection_url)
 
