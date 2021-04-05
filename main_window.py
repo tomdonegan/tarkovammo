@@ -11,7 +11,7 @@ from PyQt5.QtCore import *
 _AppName_ = 'Tarkov Ammo'
 __author__ = 'Tom Donegan'
 __license__ = 'The MIT License (MIT)'
-__version__ = 0.1
+__version__ = 0.11
 __maintainer__ = 'Tom Donegan'
 __email__ = 'tomdonegan@live.co.uk'
 __status__ = 'Beta'
@@ -71,17 +71,17 @@ class MainMenuUi(QWidget):
         layout.setColumnStretch(0, 3)
         layout.setColumnStretch(1, 3)
 
-        button_list = ['.300 Blackout', '5.56x45 mm',
-                       '.338 Lapua Magnum', '5.7x28 mm',
+        button_list = ['.300 Blackout', '5.56x45mm',
+                       '.338 Lapua Magnum', '5.7x28mm',
                        '.366mm', '7.62x25mm',
-                       '.45mm', '7.62x39 mm',
+                       '.45mm', '7.62x39mm',
                        '12 Gauge Shot', '7.62x51mm',
                        '12 Gauge Slugs', '7.62x54R',
-                       '12.7x55 mm', '9x18mm',
+                       '12.7x55mm', '9x18mm',
                        '20 Gauge', '9x19mm',
-                       '23x75 mm', '9x21mm',
-                       '4.6x30 mm', '9x39mm',
-                       '5.45x39 mm', 'Mounted Weapons',
+                       '23x75mm', '9x21mm',
+                       '4.6x30mm', '9x39mm',
+                       '5.45x39mm', 'Mounted Weapons',
                        'Other', 'Check for Updates']
 
         for i in button_list:
